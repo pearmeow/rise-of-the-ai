@@ -1,4 +1,5 @@
 # Prerequisites
+raylib_app
 *.d
 
 # Compiled Object files
