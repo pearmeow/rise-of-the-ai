@@ -17,14 +17,14 @@ constexpr int SCREEN_WIDTH = 1600, SCREEN_HEIGHT = 900, FPS = 60, SIDES = 4;
 constexpr float FIXED_TIMESTEP = 1.0f / 60.0f;
 constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0};
 
-constexpr char ROCKET_FP[] = "./assets/rocket.png";
-constexpr char TRAIL_FP[] = "./assets/fire.png";
-constexpr char BLOCK_FP[] = "./assets/block.png";
-constexpr char GREEN_BLOCK_FP[] = "./assets/greenBlock.png";
-constexpr int NUM_BLOCKS = 6;
-
 // Global Variables
 AppStatus gAppStatus = RUNNING;
+
+struct GameState {
+    Entity* player;
+    Entity* enemies;
+    Map* map;
+};
 
 float gPreviousTicks = 0.0f;
 float gTimeAccumulator = 0.0f;
