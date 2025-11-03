@@ -4,7 +4,11 @@
 #define SCENE_H
 
 struct GameState {
-    Entity* xochitl;
+    // player
+    Entity* mina;
+
+    // enemy
+    Entity* skoude;
     Map* map;
 
     Music bgm;

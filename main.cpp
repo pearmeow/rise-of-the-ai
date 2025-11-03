@@ -59,20 +59,20 @@ void initialise() {
 }
 
 void processInput() {
-    gCurrentScene->getState().xochitl->resetMovement();
+    gCurrentScene->getState().mina->resetMovement();
 
     if (IsKeyDown(KEY_A))
-        gCurrentScene->getState().xochitl->moveLeft();
+        gCurrentScene->getState().mina->moveLeft();
     else if (IsKeyDown(KEY_D))
-        gCurrentScene->getState().xochitl->moveRight();
+        gCurrentScene->getState().mina->moveRight();
 
-    if (IsKeyPressed(KEY_W) && gCurrentScene->getState().xochitl->isCollidingBottom()) {
-        gCurrentScene->getState().xochitl->jump();
+    if (IsKeyPressed(KEY_W) && gCurrentScene->getState().mina->isCollidingBottom()) {
+        gCurrentScene->getState().mina->jump();
         PlaySound(gCurrentScene->getState().jumpSound);
     }
 
-    if (GetLength(gCurrentScene->getState().xochitl->getMovement()) > 1.0f)
-        gCurrentScene->getState().xochitl->normaliseMovement();
+    if (GetLength(gCurrentScene->getState().mina->getMovement()) > 1.0f)
+        gCurrentScene->getState().mina->normaliseMovement();
 
     if (IsKeyPressed(KEY_Q) || WindowShouldClose()) gAppStatus = TERMINATED;
 }

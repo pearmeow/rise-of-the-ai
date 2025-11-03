@@ -37,7 +37,7 @@ void LevelA::initialise() {
        ----------- PROTAGONIST -----------
     */
     // TODO: change coords in vectors to match atlas
-    std::map<Direction, std::vector<int>> xochitlAnimationAtlas = {
+    std::map<Direction, std::vector<int>> minaAnimationAtlas = {
         {DOWN, {0, 1, 2, 3, 4, 5, 6, 7}},
         {LEFT, {8, 9, 10, 11, 12, 13, 14, 15}},
         {UP, {24, 25, 26, 27, 28, 29, 30, 31}},
@@ -48,45 +48,45 @@ void LevelA::initialise() {
 
     // TODO: rename this variable
     // Assets from @see https://sscary.itch.io/the-adventurer-female
-    mGameState.xochitl = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},  // position
-                                    {250.0f * sizeRatio, 250.0f},              // scale
-                                    // TODO: get new atlas
-                                    "",                     // texture file address
-                                    ATLAS,                  // single image or atlas?
-                                    {6, 8},                 // atlas dimensions
-                                    xochitlAnimationAtlas,  // actual atlas
-                                    PLAYER                  // entity type
+    mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},  // position
+                                 {250.0f * sizeRatio, 250.0f},              // scale
+                                 // TODO: get new atlas
+                                 "",                  // texture file address
+                                 ATLAS,               // single image or atlas?
+                                 {6, 8},              // atlas dimensions
+                                 minaAnimationAtlas,  // actual atlas
+                                 PLAYER               // entity type
     );
 
-    mGameState.xochitl->setJumpingPower(550.0f);
-    mGameState.xochitl->setColliderDimensions(
-        {mGameState.xochitl->getScale().x / 3.5f, mGameState.xochitl->getScale().y / 3.0f});
-    mGameState.xochitl->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+    mGameState.mina->setJumpingPower(550.0f);
+    mGameState.mina->setColliderDimensions(
+        {mGameState.mina->getScale().x / 3.5f, mGameState.mina->getScale().y / 3.0f});
+    mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
 
     /*
        ----------- CAMERA -----------
     */
     // TODO: make the camera not follow the player but scroll and also make player die when offscreen
-    mGameState.camera = {0};                                       // zero initialize
-    mGameState.camera.target = mGameState.xochitl->getPosition();  // camera follows player
-    mGameState.camera.offset = mOrigin;                            // camera offset to center of screen
-    mGameState.camera.rotation = 0.0f;                             // no rotation
-    mGameState.camera.zoom = 1.0f;                                 // default zoom
+    mGameState.camera = {0};                                    // zero initialize
+    mGameState.camera.target = mGameState.mina->getPosition();  // camera follows player
+    mGameState.camera.offset = mOrigin;                         // camera offset to center of screen
+    mGameState.camera.rotation = 0.0f;                          // no rotation
+    mGameState.camera.zoom = 1.0f;                              // default zoom
 }
 
 void LevelA::update(float deltaTime) {
     UpdateMusicStream(mGameState.bgm);
 
-    mGameState.xochitl->update(deltaTime,       // delta time / fixed timestep
-                               nullptr,         // player
-                               mGameState.map,  // map
-                               nullptr,         // collidable entities
-                               0                // col. entity count
+    mGameState.mina->update(deltaTime,       // delta time / fixed timestep
+                            nullptr,         // player
+                            mGameState.map,  // map
+                            nullptr,         // collidable entities
+                            0                // col. entity count
     );
 
-    Vector2 currentPlayerPosition = {mGameState.xochitl->getPosition().x, mOrigin.y};
+    Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
-    if (mGameState.xochitl->getPosition().y > 800.0f) mGameState.nextSceneID = 1;
+    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 1;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }
@@ -94,12 +94,12 @@ void LevelA::update(float deltaTime) {
 void LevelA::render() {
     ClearBackground(ColorFromHex(mBGColourHexCode));
 
-    mGameState.xochitl->render();
+    mGameState.mina->render();
     mGameState.map->render();
 }
 
 void LevelA::shutdown() {
-    delete mGameState.xochitl;
+    delete mGameState.mina;
     delete mGameState.map;
 
     UnloadMusicStream(mGameState.bgm);
