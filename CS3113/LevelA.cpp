@@ -17,20 +17,17 @@ void LevelA::initialise() {
     SetMusicVolume(mGameState.bgm, 0.33f);
     // PlayMusicStream(gState.bgm);
 
-    // TODO: get jump sound
-    mGameState.jumpSound = LoadSound("");
+    mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
 
     /*
        ----------- MAP -----------
     */
-    mGameState.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT,  // map grid cols & rows
-                             (unsigned int*)mLevelData,  // grid data
-                             // TODO: get atlas for tileset
-                             "",              // texture filepath
-                             TILE_DIMENSION,  // tile size
-                             // TODO: change dimensions of cols & rows
-                             4, 1,    // texture cols & rows
-                             mOrigin  // in-game origin
+    mGameState.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT,                      // map grid cols & rows
+                             (unsigned int*)mLevelData,                      // grid data
+                             "./assets/game/spritesheet-tiles-default.png",  // texture filepath
+                             TILE_DIMENSION,                                 // tile size
+                             18, 18,                                         // texture cols & rows
+                             {mOrigin.x, mOrigin.y * 3.0f}                   // in-game origin
     );
 
     /*
@@ -38,29 +35,26 @@ void LevelA::initialise() {
     */
     // TODO: change coords in vectors to match atlas
     std::map<Direction, std::vector<int>> minaAnimationAtlas = {
-        {DOWN, {0, 1, 2, 3, 4, 5, 6, 7}},
-        {LEFT, {8, 9, 10, 11, 12, 13, 14, 15}},
-        {UP, {24, 25, 26, 27, 28, 29, 30, 31}},
-        {RIGHT, {40, 41, 42, 43, 44, 45, 46, 47}},
+        {DOWN, {12}},
+        {LEFT, {35, 51}},
+        {UP, {43}},
+        {RIGHT, {35, 51}},
     };
 
     float sizeRatio = 48.0f / 64.0f;
 
     // TODO: rename this variable
     // Assets from @see https://sscary.itch.io/the-adventurer-female
-    mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},  // position
-                                 {250.0f * sizeRatio, 250.0f},              // scale
-                                 // TODO: get new atlas
-                                 "",                  // texture file address
-                                 ATLAS,               // single image or atlas?
-                                 {6, 8},              // atlas dimensions
-                                 minaAnimationAtlas,  // actual atlas
-                                 PLAYER               // entity type
+    mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
+                                 {100.0f, 100.0f},                                    // scale
+                                 "./assets/game/spritesheet-characters-default.png",  // texture file address
+                                 ATLAS,                                               // single image or atlas?
+                                 {8, 8},                                              // atlas dimensions
+                                 minaAnimationAtlas,                                  // actual atlas
+                                 PLAYER                                               // entity type
     );
 
     mGameState.mina->setJumpingPower(550.0f);
-    mGameState.mina->setColliderDimensions(
-        {mGameState.mina->getScale().x / 3.5f, mGameState.mina->getScale().y / 3.0f});
     mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
 
     /*

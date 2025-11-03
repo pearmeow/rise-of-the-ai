@@ -139,7 +139,7 @@ public:
         return mScale;
     }
     Vector2 getColliderDimensions() const {
-        return mScale;
+        return mColliderDimensions;
     }
     Vector2 getSpriteSheetDimensions() const {
         return mSpriteSheetDimensions;

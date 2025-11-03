@@ -12,6 +12,7 @@
 // TODO: get/create a main menu scene
 
 #include "CS3113/LevelB.h"
+#include "CS3113/cs3113.h"
 
 // Global Constants
 constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 2;
@@ -28,7 +29,6 @@ Scene* gCurrentScene = nullptr;
 std::vector<Scene*> gLevels = {};
 
 LevelA* gLevelA = nullptr;
-LevelB* gLevelB = nullptr;
 
 // Function Declarations
 void switchToScene(Scene* scene);
@@ -48,10 +48,8 @@ void initialise() {
     InitAudioDevice();
 
     gLevelA = new LevelA(ORIGIN, "#C0897E");
-    gLevelB = new LevelB(ORIGIN, "#011627");
 
     gLevels.push_back(gLevelA);
-    gLevels.push_back(gLevelB);
 
     switchToScene(gLevels[0]);
 
@@ -107,7 +105,6 @@ void render() {
 
 void shutdown() {
     delete gLevelA;
-    delete gLevelB;
 
     for (int i = 0; i < NUMBER_OF_LEVELS; i++) gLevels[i] = nullptr;
 
@@ -115,7 +112,7 @@ void shutdown() {
     CloseWindow();
 }
 
-int main(void) {
+int main() {
     initialise();
 
     while (gAppStatus == RUNNING) {
@@ -124,7 +121,9 @@ int main(void) {
 
         if (gCurrentScene->getState().nextSceneID > 0) {
             int id = gCurrentScene->getState().nextSceneID;
-            switchToScene(gLevels[id]);
+            // TODO: make this actually switch later
+            // switchToScene(gLevels[id]);
+            gAppStatus = TERMINATED;
         }
 
         render();
