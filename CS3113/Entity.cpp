@@ -7,7 +7,7 @@ Entity::Entity()
       mAcceleration{0.0f, 0.0f},
       mScale{DEFAULT_SIZE, DEFAULT_SIZE},
       mColliderDimensions{DEFAULT_SIZE, DEFAULT_SIZE},
-      mTexture{NULL},
+      mTexture{0},
       mTextureType{SINGLE},
       mAngle{0.0f},
       mSpriteSheetDimensions{},

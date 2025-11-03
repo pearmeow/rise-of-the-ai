@@ -11,11 +11,11 @@
 // TODO: get a soundtrack
 // TODO: get/create a main menu scene
 
-#include "CS3113/LevelB.h"
+#include "CS3113/LevelA.h"
 #include "CS3113/cs3113.h"
 
 // Global Constants
-constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 2;
+constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 1;
 
 constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 
@@ -124,6 +124,7 @@ int main() {
             // TODO: make this actually switch later
             // switchToScene(gLevels[id]);
             gAppStatus = TERMINATED;
+            break;
         }
 
         render();

@@ -1,5 +1,7 @@
 #include "LevelA.h"
 
+#include "Entity.h"
+
 LevelA::LevelA() : Scene{{0.0f}, nullptr} {
 }
 LevelA::LevelA(Vector2 origin, const char* bgHexCode) : Scene{origin, bgHexCode} {
@@ -12,10 +14,8 @@ LevelA::~LevelA() {
 void LevelA::initialise() {
     mGameState.nextSceneID = 0;
 
-    // TODO: get soundtrack
-    mGameState.bgm = LoadMusicStream("");
-    SetMusicVolume(mGameState.bgm, 0.33f);
-    // PlayMusicStream(gState.bgm);
+    mGameState.bgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
+    SetMusicVolume(mGameState.bgm, 0.10f);
 
     mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
 
@@ -27,7 +27,7 @@ void LevelA::initialise() {
                              "./assets/game/spritesheet-tiles-default.png",  // texture filepath
                              TILE_DIMENSION,                                 // tile size
                              18, 18,                                         // texture cols & rows
-                             {mOrigin.x, mOrigin.y * 3.0f}                   // in-game origin
+                             {mOrigin.x, mOrigin.y}                          // in-game origin
     );
 
     /*
@@ -43,8 +43,6 @@ void LevelA::initialise() {
 
     float sizeRatio = 48.0f / 64.0f;
 
-    // TODO: rename this variable
-    // Assets from @see https://sscary.itch.io/the-adventurer-female
     mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
                                  {100.0f, 100.0f},                                    // scale
                                  "./assets/game/spritesheet-characters-default.png",  // texture file address
@@ -54,7 +52,12 @@ void LevelA::initialise() {
                                  PLAYER                                               // entity type
     );
 
+    // TODO: make skoude
+    // mGameState.skoude = new Entity();
+
     mGameState.mina->setJumpingPower(550.0f);
+    mGameState.mina->setColliderDimensions(
+        {mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f, mGameState.mina->getColliderDimensions().y});
     mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
 
     /*
@@ -71,15 +74,18 @@ void LevelA::initialise() {
 void LevelA::update(float deltaTime) {
     UpdateMusicStream(mGameState.bgm);
 
-    mGameState.mina->update(deltaTime,       // delta time / fixed timestep
-                            nullptr,         // player
-                            mGameState.map,  // map
-                            nullptr,         // collidable entities
-                            0                // col. entity count
+    mGameState.mina->update(deltaTime,          // delta time / fixed timestep
+                            nullptr,            // player
+                            mGameState.map,     // map
+                            mGameState.skoude,  // collidable entities
+                            0                   // col. entity count
     );
+
+    // TODO: make skoude move
 
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
+    // TODO: make the player (probably touch something) to move to next level
     if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 1;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
