@@ -1,5 +1,7 @@
 #include "LevelA.h"
 
+#include <raylib.h>
+
 #include "Entity.h"
 
 LevelA::LevelA() : Scene{{0.0f}, nullptr} {
@@ -15,7 +17,8 @@ void LevelA::initialise() {
     mGameState.nextSceneID = 0;
 
     mGameState.bgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
-    SetMusicVolume(mGameState.bgm, 0.10f);
+    SetMusicVolume(mGameState.bgm, 0.50f);
+    PlayMusicStream(mGameState.bgm);
 
     mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
 
