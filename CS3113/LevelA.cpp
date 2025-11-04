@@ -21,6 +21,7 @@ void LevelA::initialise() {
     PlayMusicStream(mGameState.bgm);
 
     mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
+    SetSoundVolume(mGameState.jumpSound, 0.50f);
 
     /*
        ----------- MAP -----------
@@ -55,13 +56,32 @@ void LevelA::initialise() {
                                  PLAYER                                               // entity type
     );
 
-    // TODO: make skoude
-    // mGameState.skoude = new Entity();
-
     mGameState.mina->setJumpingPower(550.0f);
     mGameState.mina->setColliderDimensions(
         {mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f, mGameState.mina->getColliderDimensions().y});
     mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+
+    // TODO: change coords in vectors to match atlas
+    std::map<Direction, std::vector<int>> skoudeAnimationAtlas = {
+        {LEFT, {9, 17}},
+        {DOWN, {9}},
+        {RIGHT, {9, 17}},
+        {UP, {9}},
+    };
+
+    // TODO: make skoude
+    // mGameState.skoude = new Entity();
+    mGameState.skoude = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},         // position
+                                   {100.0f, 100.0f},                                 // scale
+                                   "./assets/game/spritesheet-enemies-default.png",  // texture file address
+                                   ATLAS,                                            // single image or atlas?
+                                   {8, 8},                                           // atlas dimensions
+                                   skoudeAnimationAtlas,                             // actual atlas
+                                   NPC                                               // entity type
+    );
+
+    mGameState.skoude->setAIType(WANDERER);
+    mGameState.skoude->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
 
     /*
        ----------- CAMERA -----------
@@ -77,14 +97,19 @@ void LevelA::initialise() {
 void LevelA::update(float deltaTime) {
     UpdateMusicStream(mGameState.bgm);
 
+    mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
+                              nullptr,         // player if entity is enemy
+                              mGameState.map,  // map
+                              nullptr,         // collidable entities
+                              0                // col. entity count
+    );
+
     mGameState.mina->update(deltaTime,          // delta time / fixed timestep
                             nullptr,            // player if entity is enemy
                             mGameState.map,     // map
                             mGameState.skoude,  // collidable entities
-                            0                   // col. entity count
+                            1                   // col. entity count
     );
-
-    // TODO: make skoude move
 
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
@@ -98,11 +123,13 @@ void LevelA::render() {
     ClearBackground(ColorFromHex(mBGColourHexCode));
 
     mGameState.mina->render();
+    mGameState.skoude->render();
     mGameState.map->render();
 }
 
 void LevelA::shutdown() {
     delete mGameState.mina;
+    delete mGameState.skoude;
     delete mGameState.map;
 
     UnloadMusicStream(mGameState.bgm);
