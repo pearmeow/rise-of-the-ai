@@ -78,7 +78,7 @@ void LevelA::update(float deltaTime) {
     UpdateMusicStream(mGameState.bgm);
 
     mGameState.mina->update(deltaTime,          // delta time / fixed timestep
-                            nullptr,            // player
+                            nullptr,            // player if entity is enemy
                             mGameState.map,     // map
                             mGameState.skoude,  // collidable entities
                             0                   // col. entity count
