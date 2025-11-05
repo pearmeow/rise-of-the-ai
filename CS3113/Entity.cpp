@@ -80,12 +80,12 @@ void Entity::checkCollisionY(Entity* collidableEntities, int collisionCheckCount
                 mPosition.y -= yOverlap;
                 mVelocity.y = 0;
                 mIsCollidingBottom = true;
+                collidableEntity->deactivate();
             } else if (mVelocity.y < 0) {
                 mPosition.y += yOverlap;
                 mVelocity.y = 0;
                 mIsCollidingTop = true;
-
-                // TODO: implement destroying the other entity if type is enemy or something
+                collidableEntity->deactivate();
 
                 if (collidableEntity->mEntityType == BLOCK) collidableEntity->deactivate();
             }
@@ -122,12 +122,14 @@ void Entity::checkCollisionX(Entity* collidableEntities, int collisionCheckCount
 
                 // Collision!
                 mIsCollidingRight = true;
+                deactivate();
             } else if (mVelocity.x < 0) {
                 mPosition.x += xOverlap;
                 mVelocity.x = 0;
 
                 // Collision!
                 mIsCollidingLeft = true;
+                deactivate();
             }
         }
     }

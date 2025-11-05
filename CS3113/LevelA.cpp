@@ -60,6 +60,7 @@ void LevelA::initialise() {
     mGameState.mina->setColliderDimensions(
         {mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f, mGameState.mina->getColliderDimensions().y});
     mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+    mGameState.mina->setFrameSpeed(6);
 
     // TODO: change coords in vectors to match atlas
     std::map<Direction, std::vector<int>> skoudeAnimationAtlas = {
@@ -71,7 +72,7 @@ void LevelA::initialise() {
 
     // TODO: make skoude
     // mGameState.skoude = new Entity();
-    mGameState.skoude = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},         // position
+    mGameState.skoude = new Entity({mOrigin.x - 400.0f, mOrigin.y - 200.0f},         // position
                                    {100.0f, 100.0f},                                 // scale
                                    "./assets/game/spritesheet-enemies-default.png",  // texture file address
                                    ATLAS,                                            // single image or atlas?
@@ -81,7 +82,9 @@ void LevelA::initialise() {
     );
 
     mGameState.skoude->setAIType(WANDERER);
+    mGameState.skoude->setSpeed(10);
     mGameState.skoude->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+    mGameState.skoude->setFrameSpeed(6);
 
     /*
        ----------- CAMERA -----------
