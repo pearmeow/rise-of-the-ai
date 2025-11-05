@@ -48,7 +48,7 @@ void LevelA::initialise() {
     float sizeRatio = 48.0f / 64.0f;
 
     mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
-                                 {100.0f, 100.0f},                                    // scale
+                                 {150.0f, 50.0f},                                     // scale
                                  "./assets/game/spritesheet-characters-default.png",  // texture file address
                                  ATLAS,                                               // single image or atlas?
                                  {8, 8},                                              // atlas dimensions
@@ -72,7 +72,7 @@ void LevelA::initialise() {
 
     // TODO: make skoude
     // mGameState.skoude = new Entity();
-    mGameState.skoude = new Entity({mOrigin.x - 400.0f, mOrigin.y - 200.0f},         // position
+    mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
                                    {100.0f, 100.0f},                                 // scale
                                    "./assets/game/spritesheet-enemies-default.png",  // texture file address
                                    ATLAS,                                            // single image or atlas?

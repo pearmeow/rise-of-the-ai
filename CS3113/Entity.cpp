@@ -85,7 +85,7 @@ void Entity::checkCollisionY(Entity* collidableEntities, int collisionCheckCount
                 mPosition.y += yOverlap;
                 mVelocity.y = 0;
                 mIsCollidingTop = true;
-                collidableEntity->deactivate();
+                deactivate();
 
                 if (collidableEntity->mEntityType == BLOCK) collidableEntity->deactivate();
             }
