@@ -13,6 +13,7 @@
 
 #include <raylib.h>
 
+#include <charconv>
 #include <cstdlib>
 
 #include "CS3113/LevelA.h"
@@ -37,6 +38,8 @@ Music gBgm;
 
 Scene* gCurrentScene = nullptr;
 int gLives = 3;
+char gLivesText[20] = "Lives: ";
+Vector2 gLivesTextPos = {0.0f, 0.0f};
 int gSceneIndex = 0;
 std::vector<Scene*> gLevels = {};
 
@@ -168,12 +171,14 @@ void update() {
         switchToScene(gLevels[gSceneIndex]);
         gLives = 3;
     }
+    std::to_chars(gLivesText + 6, gLivesText + 20, gLives);
 }
 
 void render() {
     BeginDrawing();
     BeginMode2D(gCurrentScene->getState().camera);
 
+    DrawText(gLivesText, 10.0f, 10.0f, 30, BLACK);
     gCurrentScene->render();
 
     EndMode2D();

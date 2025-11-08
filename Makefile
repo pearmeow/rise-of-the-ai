@@ -17,7 +17,7 @@ TARGET = raylib_app
 #  Compiler / basic flags
 # ------------------------------------------------------------
 CXX      = g++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++17
 
 # ------------------------------------------------------------
 #  Raylib configuration (pkg‑config works on macOS too)
