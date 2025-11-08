@@ -1,3 +1,6 @@
+#ifndef LEVEL_A_H
+#define LEVEL_A_H
+
 #include "Scene.h"
 
 constexpr int LEVEL_WIDTH = 25, LEVEL_HEIGHT = 8;
@@ -29,3 +32,5 @@ public:
     void render() override;
     void shutdown() override;
 };
+
+#endif

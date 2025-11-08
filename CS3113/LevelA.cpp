@@ -117,7 +117,7 @@ void LevelA::update(float deltaTime) {
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
     // TODO: make the player (probably touch something) to move to next level
-    if (mGameState.mina->getPosition().x > 800.0f) mGameState.nextSceneID = 2;
+    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 2;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }

@@ -14,10 +14,11 @@
 #include <raylib.h>
 
 #include "CS3113/LevelA.h"
+#include "CS3113/MainMenu.h"
 #include "CS3113/cs3113.h"
 
 // Global Constants
-constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 1;
+constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 2;
 
 constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 
@@ -32,10 +33,10 @@ int gLives = 3;
 int gSceneIndex = 0;
 std::vector<Scene*> gLevels = {};
 
+MainMenu* gMainMenu = nullptr;
 LevelA* gLevelA = nullptr;
 // LevelB* gLevelB = nullptr;
 // LevelC* gLevelC = nullptr;
-// MainMenu* gMainMenu = nullptr;
 // LoseScreen* gLoseScreen = nullptr;
 
 // Function Declarations
@@ -56,8 +57,9 @@ void initialise() {
     InitAudioDevice();
 
     gLevelA = new LevelA(ORIGIN, "#C0897E");
+    gMainMenu = new MainMenu(ORIGIN, "#FFFFFF");
 
-    // gLevels.push_back(gMainMenu);
+    gLevels.push_back(gMainMenu);
     gLevels.push_back(gLevelA);
     // gLevels.push_back(gLevelB);
     // gLevels.push_back(gLevelC);
@@ -69,26 +71,31 @@ void initialise() {
 }
 
 void processInput() {
-    gCurrentScene->getState().mina->resetMovement();
+    if (gCurrentScene->getState().mina) {
+        gCurrentScene->getState().mina->resetMovement();
 
-    if (IsKeyDown(KEY_A))
-        gCurrentScene->getState().mina->moveLeft();
-    else if (IsKeyDown(KEY_D))
-        gCurrentScene->getState().mina->moveRight();
+        if (IsKeyDown(KEY_A))
+            gCurrentScene->getState().mina->moveLeft();
+        else if (IsKeyDown(KEY_D))
+            gCurrentScene->getState().mina->moveRight();
 
-    if (IsKeyPressed(KEY_W) && gCurrentScene->getState().mina->isCollidingBottom()) {
-        gCurrentScene->getState().mina->jump();
-        PlaySound(gCurrentScene->getState().jumpSound);
+        if (IsKeyPressed(KEY_W) && gCurrentScene->getState().mina->isCollidingBottom()) {
+            gCurrentScene->getState().mina->jump();
+            PlaySound(gCurrentScene->getState().jumpSound);
+        }
+
+        if (GetLength(gCurrentScene->getState().mina->getMovement()) > 1.0f)
+            gCurrentScene->getState().mina->normaliseMovement();
     }
 
-    if (GetLength(gCurrentScene->getState().mina->getMovement()) > 1.0f)
-        gCurrentScene->getState().mina->normaliseMovement();
-
     if (IsKeyPressed(KEY_ENTER)) {
-        if (gSceneIndex == 4) {
+        printf("hi\n");
+        if (gSceneIndex == NUMBER_OF_LEVELS - 1) {
+            printf("minus 1\n");
             gSceneIndex = 0;
             switchToScene(gLevels[gSceneIndex]);
         } else if (gSceneIndex == 0) {
+            printf("zero \n");
             gSceneIndex = 1;
             switchToScene(gLevels[gSceneIndex]);
         }
@@ -113,10 +120,12 @@ void update() {
         gCurrentScene->update(FIXED_TIMESTEP);
         deltaTime -= FIXED_TIMESTEP;
     }
-    if (!gCurrentScene->getState().mina->isActive()) {
-        --gLives;
-        gCurrentScene->initialise();
-        printf("%i\n", gLives);
+    if (gCurrentScene->getState().mina) {
+        if (!gCurrentScene->getState().mina->isActive()) {
+            --gLives;
+            gCurrentScene->initialise();
+            printf("%i\n", gLives);
+        }
     }
     if (gLives <= 0) {
         switchToScene(gLevels[3]);
@@ -136,8 +145,11 @@ void render() {
 
 void shutdown() {
     delete gLevelA;
+    delete gMainMenu;
 
-    for (int i = 0; i < NUMBER_OF_LEVELS; i++) gLevels[i] = nullptr;
+    for (size_t i = 0; i < gLevels.size(); ++i) {
+        gLevels[i] = nullptr;
+    }
 
     CloseAudioDevice();
     CloseWindow();

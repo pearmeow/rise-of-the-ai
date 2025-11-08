@@ -1,6 +1,7 @@
-#include "Scene.h"
+#include "LevelA.h"
 
-constexpr int LEVEL_WIDTH = 25, LEVEL_HEIGHT = 8;
+#ifndef MAIN_MENU_H
+#define MAIN_MENU_H
 
 class MainMenu : public Scene {
 public:
@@ -13,3 +14,5 @@ public:
     void render() override;
     void shutdown() override;
 };
+
+#endif

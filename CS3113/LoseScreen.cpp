@@ -1,19 +1,19 @@
-#include "LevelA.h"
+#include "LoseScreen.h"
 
 #include <raylib.h>
 
 #include "Entity.h"
 
-LevelA::LevelA() : Scene{{0.0f}, nullptr} {
+LoseScreen::LoseScreen() : Scene{{0.0f}, nullptr} {
 }
-LevelA::LevelA(Vector2 origin, const char* bgHexCode) : Scene{origin, bgHexCode} {
+LoseScreen::LoseScreen(Vector2 origin, const char* bgHexCode) : Scene{origin, bgHexCode} {
 }
 
-LevelA::~LevelA() {
+LoseScreen::~LoseScreen() {
     shutdown();
 }
 
-void LevelA::initialise() {
+void LoseScreen::initialise() {
     mGameState.nextSceneID = 0;
 
     mGameState.bgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
@@ -97,7 +97,7 @@ void LevelA::initialise() {
     mGameState.camera.zoom = 1.0f;                              // default zoom
 }
 
-void LevelA::update(float deltaTime) {
+void LoseScreen::update(float deltaTime) {
     UpdateMusicStream(mGameState.bgm);
 
     mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
@@ -122,7 +122,7 @@ void LevelA::update(float deltaTime) {
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }
 
-void LevelA::render() {
+void LoseScreen::render() {
     ClearBackground(ColorFromHex(mBGColourHexCode));
 
     mGameState.mina->render();
@@ -130,7 +130,7 @@ void LevelA::render() {
     mGameState.map->render();
 }
 
-void LevelA::shutdown() {
+void LoseScreen::shutdown() {
     delete mGameState.mina;
     delete mGameState.skoude;
     delete mGameState.map;
