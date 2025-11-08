@@ -23,6 +23,10 @@ void LevelA::initialise() {
 
         mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
         SetSoundVolume(mGameState.jumpSound, 0.40f);
+        mGameState.deathSound = LoadSound("./assets/game/death.mp3");
+        SetSoundVolume(mGameState.deathSound, 0.40f);
+        mGameState.walkSound = LoadSound("./assets/game/walking-on-grass.mp3");
+        SetSoundVolume(mGameState.walkSound, 0.40f);
     }
 
     /*

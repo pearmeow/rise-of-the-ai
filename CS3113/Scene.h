@@ -13,8 +13,8 @@ struct GameState {
 
     Music bgm;
     Sound jumpSound;
-    Sound enemyDeathSound;
-    Sound playerDeathSound;
+    Sound walkSound;
+    Sound deathSound;
 
     Camera2D camera;
 
