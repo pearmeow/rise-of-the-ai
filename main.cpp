@@ -13,6 +13,8 @@
 
 #include <raylib.h>
 
+#include <cstdlib>
+
 #include "CS3113/LevelA.h"
 #include "CS3113/LoseScreen.h"
 #include "CS3113/MainMenu.h"
@@ -29,12 +31,15 @@ constexpr float FIXED_TIMESTEP = 1.0f / 60.0f;
 // Global Variables
 AppStatus gAppStatus = RUNNING;
 float gPreviousTicks = 0.0f, gTimeAccumulator = 0.0f;
+Music gBgm;
 
 Scene* gCurrentScene = nullptr;
 int gLives = 3;
 int gSceneIndex = 0;
 std::vector<Scene*> gLevels = {};
 
+bool gPlayWalkSound = false;
+int gTimeframes = 0;
 MainMenu* gMainMenu = nullptr;
 LevelA* gLevelA = nullptr;
 // LevelB* gLevelB = nullptr;
@@ -58,6 +63,9 @@ void switchToScene(Scene* scene) {
 void initialise() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Scenes");
     InitAudioDevice();
+    gBgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
+    SetMusicVolume(gBgm, 0.10f);
+    PlayMusicStream(gBgm);
 
     gLevelA = new LevelA(ORIGIN, "#C0897E");
     gMainMenu = new MainMenu(ORIGIN, "#FFFFFF");
@@ -83,13 +91,13 @@ void processInput() {
 
         if (IsKeyDown(KEY_A)) {
             gCurrentScene->getState().mina->moveLeft();
-            if (gCurrentScene->getState().mina->isCollidingBottom()) {
-                PlaySound(gCurrentScene->getState().walkSound);
+            if (abs(gCurrentScene->getState().mina->getVelocity().y) <= 0.001) {
+                gPlayWalkSound = true;
             }
         } else if (IsKeyDown(KEY_D)) {
             gCurrentScene->getState().mina->moveRight();
-            if (gCurrentScene->getState().mina->isCollidingBottom()) {
-                PlaySound(gCurrentScene->getState().walkSound);
+            if (abs(gCurrentScene->getState().mina->getVelocity().y) <= 0.001) {
+                gPlayWalkSound = true;
             }
         }
 
@@ -116,6 +124,8 @@ void processInput() {
 }
 
 void update() {
+    UpdateMusicStream(gBgm);
+
     float ticks = (float)GetTime();
     float deltaTime = ticks - gPreviousTicks;
     gPreviousTicks = ticks;
@@ -130,6 +140,16 @@ void update() {
     while (deltaTime >= FIXED_TIMESTEP) {
         gCurrentScene->update(FIXED_TIMESTEP);
         deltaTime -= FIXED_TIMESTEP;
+        if (gPlayWalkSound && gTimeframes == 0) {
+            PlaySound(gCurrentScene->getState().walkSound);
+            gPlayWalkSound = false;
+            ++gTimeframes;
+        } else if (gPlayWalkSound) {
+            ++gTimeframes;
+            if (gTimeframes == 20) {
+                gTimeframes = 0;
+            }
+        }
     }
     if (gCurrentScene->getState().mina) {
         if (!gCurrentScene->getState().mina->isActive()) {
@@ -165,6 +185,7 @@ void shutdown() {
         gLevels[i] = nullptr;
     }
 
+    UnloadMusicStream(gBgm);
     CloseAudioDevice();
     CloseWindow();
 }

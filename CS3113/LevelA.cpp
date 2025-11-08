@@ -17,15 +17,11 @@ void LevelA::initialise() {
     mGameState.nextSceneID = 0;
 
     if (!mGameState.mina) {
-        mGameState.bgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
-        SetMusicVolume(mGameState.bgm, 0.40f);
-        PlayMusicStream(mGameState.bgm);
-
         mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
         SetSoundVolume(mGameState.jumpSound, 0.40f);
-        mGameState.deathSound = LoadSound("./assets/game/death.mp3");
+        mGameState.deathSound = LoadSound("./assets/game/death.wav");
         SetSoundVolume(mGameState.deathSound, 0.40f);
-        mGameState.walkSound = LoadSound("./assets/game/walking-on-grass.mp3");
+        mGameState.walkSound = LoadSound("./assets/game/walking-on-grass.wav");
         SetSoundVolume(mGameState.walkSound, 0.40f);
     }
 
@@ -55,6 +51,7 @@ void LevelA::initialise() {
     float sizeRatio = 48.0f / 64.0f;
 
     if (mGameState.mina) {
+        mGameState.mina->resetMovement();
         mGameState.mina->activate();
         mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y - 200.0f});
     } else {
@@ -111,8 +108,6 @@ void LevelA::initialise() {
 }
 
 void LevelA::update(float deltaTime) {
-    UpdateMusicStream(mGameState.bgm);
-
     mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
                               nullptr,         // player if entity is enemy
                               mGameState.map,  // map
@@ -147,6 +142,5 @@ void LevelA::shutdown() {
     delete mGameState.skoude;
     delete mGameState.map;
 
-    UnloadMusicStream(mGameState.bgm);
     UnloadSound(mGameState.jumpSound);
 }
