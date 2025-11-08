@@ -91,8 +91,8 @@ void LevelB::initialise() {
                                        NPC                                               // entity type
         );
 
-        mGameState.skoude->setAIType(WANDERER);
-        mGameState.skoude->setSpeed(10);
+        mGameState.skoude->setAIType(FOLLOWER);
+        mGameState.skoude->setSpeed(40);
         mGameState.skoude->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
         mGameState.skoude->setFrameSpeed(6);
     }
@@ -108,8 +108,8 @@ void LevelB::initialise() {
 }
 
 void LevelB::update(float deltaTime) {
-    mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
-                              nullptr,         // player if entity is enemy
+    mGameState.skoude->update(deltaTime,  // delta time / fixed timestep
+                              mGameState.mina,
                               mGameState.map,  // map
                               nullptr,         // collidable entities
                               0                // col. entity count

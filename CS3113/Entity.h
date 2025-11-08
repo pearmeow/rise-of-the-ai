@@ -46,7 +46,7 @@ private:
     EntityType mEntityType;
 
     AIType mAIType;
-    AIState mAIState;
+    AIState mAIState = IDLE;
 
     bool isColliding(Entity* other) const;
 

@@ -53,9 +53,9 @@ void LevelA::initialise() {
     if (mGameState.mina) {
         mGameState.mina->resetMovement();
         mGameState.mina->activate();
-        mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y - 200.0f});
+        mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y + 180.0f});
     } else {
-        mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
+        mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y + 180.0f},            // position
                                      {150.0f, 50.0f},                                     // scale
                                      "./assets/game/spritesheet-characters-default.png",  // texture file address
                                      ATLAS,                                               // single image or atlas?
@@ -82,7 +82,7 @@ void LevelA::initialise() {
         mGameState.skoude->activate();
         mGameState.skoude->setPosition({mOrigin.x + 400.0f, mOrigin.y - 200.0f});
     } else {
-        mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
+        mGameState.skoude = new Entity({mOrigin.x + 200.0f, mOrigin.y - 200.0f},         // position
                                        {100.0f, 100.0f},                                 // scale
                                        "./assets/game/spritesheet-enemies-default.png",  // texture file address
                                        ATLAS,                                            // single image or atlas?
@@ -108,8 +108,8 @@ void LevelA::initialise() {
 }
 
 void LevelA::update(float deltaTime) {
-    mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
-                              nullptr,         // player if entity is enemy
+    mGameState.skoude->update(deltaTime,  // delta time / fixed timestep
+                              mGameState.mina,
                               mGameState.map,  // map
                               nullptr,         // collidable entities
                               0                // col. entity count
