@@ -17,11 +17,11 @@ void LevelA::initialise() {
     mGameState.nextSceneID = 0;
 
     mGameState.bgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
-    SetMusicVolume(mGameState.bgm, 0.50f);
+    SetMusicVolume(mGameState.bgm, 0.01f);
     PlayMusicStream(mGameState.bgm);
 
     mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
-    SetSoundVolume(mGameState.jumpSound, 0.50f);
+    SetSoundVolume(mGameState.jumpSound, 0.01f);
 
     /*
        ----------- MAP -----------
@@ -117,7 +117,7 @@ void LevelA::update(float deltaTime) {
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
     // TODO: make the player (probably touch something) to move to next level
-    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 1;
+    if (mGameState.mina->getPosition().x > 800.0f) mGameState.nextSceneID = 2;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }

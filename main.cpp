@@ -11,6 +11,8 @@
 // TODO: get a soundtrack
 // TODO: get/create a main menu scene
 
+#include <raylib.h>
+
 #include "CS3113/LevelA.h"
 #include "CS3113/cs3113.h"
 
@@ -26,9 +28,15 @@ AppStatus gAppStatus = RUNNING;
 float gPreviousTicks = 0.0f, gTimeAccumulator = 0.0f;
 
 Scene* gCurrentScene = nullptr;
+int gLives = 3;
+int gSceneIndex = 0;
 std::vector<Scene*> gLevels = {};
 
 LevelA* gLevelA = nullptr;
+// LevelB* gLevelB = nullptr;
+// LevelC* gLevelC = nullptr;
+// MainMenu* gMainMenu = nullptr;
+// LoseScreen* gLoseScreen = nullptr;
 
 // Function Declarations
 void switchToScene(Scene* scene);
@@ -49,7 +57,11 @@ void initialise() {
 
     gLevelA = new LevelA(ORIGIN, "#C0897E");
 
+    // gLevels.push_back(gMainMenu);
     gLevels.push_back(gLevelA);
+    // gLevels.push_back(gLevelB);
+    // gLevels.push_back(gLevelC);
+    // gLevels.push_back(gLoseScreen);
 
     switchToScene(gLevels[0]);
 
@@ -72,6 +84,16 @@ void processInput() {
     if (GetLength(gCurrentScene->getState().mina->getMovement()) > 1.0f)
         gCurrentScene->getState().mina->normaliseMovement();
 
+    if (IsKeyPressed(KEY_ENTER)) {
+        if (gSceneIndex == 4) {
+            gSceneIndex = 0;
+            switchToScene(gLevels[gSceneIndex]);
+        } else if (gSceneIndex == 0) {
+            gSceneIndex = 1;
+            switchToScene(gLevels[gSceneIndex]);
+        }
+    }
+
     if (IsKeyPressed(KEY_Q) || WindowShouldClose()) gAppStatus = TERMINATED;
 }
 
@@ -90,6 +112,15 @@ void update() {
     while (deltaTime >= FIXED_TIMESTEP) {
         gCurrentScene->update(FIXED_TIMESTEP);
         deltaTime -= FIXED_TIMESTEP;
+    }
+    if (!gCurrentScene->getState().mina->isActive()) {
+        --gLives;
+        gCurrentScene->initialise();
+        printf("%i\n", gLives);
+    }
+    if (gLives <= 0) {
+        switchToScene(gLevels[3]);
+        gLives = 3;
     }
 }
 
@@ -121,10 +152,7 @@ int main() {
 
         if (gCurrentScene->getState().nextSceneID > 0) {
             int id = gCurrentScene->getState().nextSceneID;
-            // TODO: make this actually switch later
-            // switchToScene(gLevels[id]);
-            gAppStatus = TERMINATED;
-            break;
+            switchToScene(gLevels[id]);
         }
 
         render();
