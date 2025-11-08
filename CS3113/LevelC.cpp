@@ -16,28 +16,31 @@ LevelC::~LevelC() {
 void LevelC::initialise() {
     mGameState.nextSceneID = 0;
 
-    mGameState.bgm = LoadMusicStream("./assets/game/Mesmerizing Galaxy Loop.mp3");
-    SetMusicVolume(mGameState.bgm, 0.01f);
-    PlayMusicStream(mGameState.bgm);
-
-    mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
-    SetSoundVolume(mGameState.jumpSound, 0.01f);
+    if (!mGameState.mina) {
+        mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
+        SetSoundVolume(mGameState.jumpSound, 0.40f);
+        mGameState.deathSound = LoadSound("./assets/game/death.wav");
+        SetSoundVolume(mGameState.deathSound, 0.40f);
+        mGameState.walkSound = LoadSound("./assets/game/walking-on-grass.wav");
+        SetSoundVolume(mGameState.walkSound, 0.40f);
+    }
 
     /*
        ----------- MAP -----------
     */
-    mGameState.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT,                      // map grid cols & rows
-                             (unsigned int*)mLevelData,                      // grid data
-                             "./assets/game/spritesheet-tiles-default.png",  // texture filepath
-                             TILE_DIMENSION,                                 // tile size
-                             18, 18,                                         // texture cols & rows
-                             {mOrigin.x, mOrigin.y}                          // in-game origin
-    );
+    if (!mGameState.map) {
+        mGameState.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT,                      // map grid cols & rows
+                                 (unsigned int*)mLevelData,                      // grid data
+                                 "./assets/game/spritesheet-tiles-default.png",  // texture filepath
+                                 TILE_DIMENSION,                                 // tile size
+                                 18, 18,                                         // texture cols & rows
+                                 {mOrigin.x, mOrigin.y}                          // in-game origin
+        );
+    }
 
     /*
        ----------- PROTAGONIST -----------
     */
-    // TODO: change coords in vectors to match atlas
     std::map<Direction, std::vector<int>> minaAnimationAtlas = {
         {DOWN, {12}},
         {LEFT, {35, 51}},
@@ -47,22 +50,27 @@ void LevelC::initialise() {
 
     float sizeRatio = 48.0f / 64.0f;
 
-    mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
-                                 {150.0f, 50.0f},                                     // scale
-                                 "./assets/game/spritesheet-characters-default.png",  // texture file address
-                                 ATLAS,                                               // single image or atlas?
-                                 {8, 8},                                              // atlas dimensions
-                                 minaAnimationAtlas,                                  // actual atlas
-                                 PLAYER                                               // entity type
-    );
+    if (mGameState.mina) {
+        mGameState.mina->resetMovement();
+        mGameState.mina->activate();
+        mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y - 200.0f});
+    } else {
+        mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
+                                     {150.0f, 50.0f},                                     // scale
+                                     "./assets/game/spritesheet-characters-default.png",  // texture file address
+                                     ATLAS,                                               // single image or atlas?
+                                     {8, 8},                                              // atlas dimensions
+                                     minaAnimationAtlas,                                  // actual atlas
+                                     PLAYER                                               // entity type
+        );
 
-    mGameState.mina->setJumpingPower(550.0f);
-    mGameState.mina->setColliderDimensions(
-        {mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f, mGameState.mina->getColliderDimensions().y});
-    mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
-    mGameState.mina->setFrameSpeed(6);
+        mGameState.mina->setJumpingPower(550.0f);
+        mGameState.mina->setColliderDimensions({mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f,
+                                                mGameState.mina->getColliderDimensions().y});
+        mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+        mGameState.mina->setFrameSpeed(6);
+    }
 
-    // TODO: change coords in vectors to match atlas
     std::map<Direction, std::vector<int>> skoudeAnimationAtlas = {
         {LEFT, {9, 17}},
         {DOWN, {9}},
@@ -70,26 +78,28 @@ void LevelC::initialise() {
         {UP, {9}},
     };
 
-    // TODO: make skoude
-    // mGameState.skoude = new Entity();
-    mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
-                                   {100.0f, 100.0f},                                 // scale
-                                   "./assets/game/spritesheet-enemies-default.png",  // texture file address
-                                   ATLAS,                                            // single image or atlas?
-                                   {8, 8},                                           // atlas dimensions
-                                   skoudeAnimationAtlas,                             // actual atlas
-                                   NPC                                               // entity type
-    );
+    if (mGameState.skoude) {
+        mGameState.skoude->activate();
+        mGameState.skoude->setPosition({mOrigin.x + 400.0f, mOrigin.y - 200.0f});
+    } else {
+        mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
+                                       {100.0f, 100.0f},                                 // scale
+                                       "./assets/game/spritesheet-enemies-default.png",  // texture file address
+                                       ATLAS,                                            // single image or atlas?
+                                       {8, 8},                                           // atlas dimensions
+                                       skoudeAnimationAtlas,                             // actual atlas
+                                       NPC                                               // entity type
+        );
 
-    mGameState.skoude->setAIType(WANDERER);
-    mGameState.skoude->setSpeed(10);
-    mGameState.skoude->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
-    mGameState.skoude->setFrameSpeed(6);
+        mGameState.skoude->setAIType(WANDERER);
+        mGameState.skoude->setSpeed(10);
+        mGameState.skoude->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+        mGameState.skoude->setFrameSpeed(6);
+    }
 
     /*
        ----------- CAMERA -----------
     */
-    // TODO: make the camera not follow the player but scroll and also make player die when offscreen
     mGameState.camera = {0};                                    // zero initialize
     mGameState.camera.target = mGameState.mina->getPosition();  // camera follows player
     mGameState.camera.offset = mOrigin;                         // camera offset to center of screen
@@ -98,8 +108,6 @@ void LevelC::initialise() {
 }
 
 void LevelC::update(float deltaTime) {
-    UpdateMusicStream(mGameState.bgm);
-
     mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
                               nullptr,         // player if entity is enemy
                               mGameState.map,  // map
@@ -116,8 +124,7 @@ void LevelC::update(float deltaTime) {
 
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
-    // TODO: make the player (probably touch something) to move to next level
-    if (mGameState.mina->getPosition().x > 800.0f) mGameState.nextSceneID = 2;
+    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 2;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }
@@ -135,6 +142,5 @@ void LevelC::shutdown() {
     delete mGameState.skoude;
     delete mGameState.map;
 
-    UnloadMusicStream(mGameState.bgm);
     UnloadSound(mGameState.jumpSound);
 }

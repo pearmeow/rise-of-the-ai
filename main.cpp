@@ -16,6 +16,8 @@
 #include <cstdlib>
 
 #include "CS3113/LevelA.h"
+#include "CS3113/LevelB.h"
+#include "CS3113/LevelC.h"
 #include "CS3113/LoseScreen.h"
 #include "CS3113/MainMenu.h"
 #include "CS3113/WinScreen.h"
@@ -42,8 +44,8 @@ bool gPlayWalkSound = false;
 int gTimeframes = 0;
 MainMenu* gMainMenu = nullptr;
 LevelA* gLevelA = nullptr;
-// LevelB* gLevelB = nullptr;
-// LevelC* gLevelC = nullptr;
+LevelB* gLevelB = nullptr;
+LevelC* gLevelC = nullptr;
 WinScreen* gWinScreen = nullptr;
 LoseScreen* gLoseScreen = nullptr;
 
@@ -67,18 +69,19 @@ void initialise() {
     SetMusicVolume(gBgm, 0.10f);
     PlayMusicStream(gBgm);
 
-    gLevelA = new LevelA(ORIGIN, "#C0897E");
     gMainMenu = new MainMenu(ORIGIN, "#FFFFFF");
+    gLevelA = new LevelA(ORIGIN, "#C0897E");
+    gLevelB = new LevelB(ORIGIN, "#AAAAAA");
+    gLevelC = new LevelC(ORIGIN, "#EEEEEE");
     gWinScreen = new WinScreen(ORIGIN, "#FFFFFF");
     gLoseScreen = new LoseScreen(ORIGIN, "#FFFFFF");
 
     gLevels.push_back(gMainMenu);
     gLevels.push_back(gLevelA);
+    gLevels.push_back(gLevelB);
+    gLevels.push_back(gLevelC);
     gLevels.push_back(gWinScreen);
     gLevels.push_back(gLoseScreen);
-    // gLevels.push_back(gLevelB);
-    // gLevels.push_back(gLevelC);
-    // gLevels.push_back(gLoseScreen);
 
     switchToScene(gLevels[0]);
 

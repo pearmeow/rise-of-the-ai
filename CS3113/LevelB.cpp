@@ -1,5 +1,9 @@
 #include "LevelB.h"
 
+#include <raylib.h>
+
+#include "Entity.h"
+
 LevelB::LevelB() : Scene{{0.0f}, nullptr} {
 }
 LevelB::LevelB(Vector2 origin, const char* bgHexCode) : Scene{origin, bgHexCode} {
@@ -10,49 +14,88 @@ LevelB::~LevelB() {
 }
 
 void LevelB::initialise() {
-    mGameState.bgm = LoadMusicStream("assets/game/04 - Silent Forest.wav");
-    SetMusicVolume(mGameState.bgm, 0.33f);
-    // PlayMusicStream(gState.bgm);
+    mGameState.nextSceneID = 0;
 
-    mGameState.jumpSound = LoadSound("assets/game/Dirt Jump.wav");
+    if (!mGameState.mina) {
+        mGameState.jumpSound = LoadSound("./assets/game/sfx_jump.ogg");
+        SetSoundVolume(mGameState.jumpSound, 0.40f);
+        mGameState.deathSound = LoadSound("./assets/game/death.wav");
+        SetSoundVolume(mGameState.deathSound, 0.40f);
+        mGameState.walkSound = LoadSound("./assets/game/walking-on-grass.wav");
+        SetSoundVolume(mGameState.walkSound, 0.40f);
+    }
 
     /*
        ----------- MAP -----------
     */
-    mGameState.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT,  // map grid cols & rows
-                             (unsigned int*)mLevelData,  // grid data
-                             "assets/game/tileset.png",  // texture filepath
-                             TILE_DIMENSION,             // tile size
-                             4, 1,                       // texture cols & rows
-                             mOrigin                     // in-game origin
-    );
+    if (!mGameState.map) {
+        mGameState.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT,                      // map grid cols & rows
+                                 (unsigned int*)mLevelData,                      // grid data
+                                 "./assets/game/spritesheet-tiles-default.png",  // texture filepath
+                                 TILE_DIMENSION,                                 // tile size
+                                 18, 18,                                         // texture cols & rows
+                                 {mOrigin.x, mOrigin.y}                          // in-game origin
+        );
+    }
 
     /*
        ----------- PROTAGONIST -----------
     */
     std::map<Direction, std::vector<int>> minaAnimationAtlas = {
-        {DOWN, {0, 1, 2, 3, 4, 5, 6, 7}},
-        {LEFT, {8, 9, 10, 11, 12, 13, 14, 15}},
-        {UP, {24, 25, 26, 27, 28, 29, 30, 31}},
-        {RIGHT, {40, 41, 42, 43, 44, 45, 46, 47}},
+        {DOWN, {12}},
+        {LEFT, {35, 51}},
+        {UP, {43}},
+        {RIGHT, {35, 51}},
     };
 
     float sizeRatio = 48.0f / 64.0f;
 
-    // Assets from @see https://sscary.itch.io/the-adventurer-female
-    mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},  // position
-                                 {250.0f * sizeRatio, 250.0f},              // scale
-                                 "assets/game/walk.png",                    // texture file address
-                                 ATLAS,                                     // single image or atlas?
-                                 {6, 8},                                    // atlas dimensions
-                                 minaAnimationAtlas,                        // actual atlas
-                                 PLAYER                                     // entity type
-    );
+    if (mGameState.mina) {
+        mGameState.mina->resetMovement();
+        mGameState.mina->activate();
+        mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y - 200.0f});
+    } else {
+        mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
+                                     {150.0f, 50.0f},                                     // scale
+                                     "./assets/game/spritesheet-characters-default.png",  // texture file address
+                                     ATLAS,                                               // single image or atlas?
+                                     {8, 8},                                              // atlas dimensions
+                                     minaAnimationAtlas,                                  // actual atlas
+                                     PLAYER                                               // entity type
+        );
 
-    mGameState.mina->setJumpingPower(550.0f);
-    mGameState.mina->setColliderDimensions(
-        {mGameState.mina->getScale().x / 3.5f, mGameState.mina->getScale().y / 3.0f});
-    mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+        mGameState.mina->setJumpingPower(550.0f);
+        mGameState.mina->setColliderDimensions({mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f,
+                                                mGameState.mina->getColliderDimensions().y});
+        mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+        mGameState.mina->setFrameSpeed(6);
+    }
+
+    std::map<Direction, std::vector<int>> skoudeAnimationAtlas = {
+        {LEFT, {9, 17}},
+        {DOWN, {9}},
+        {RIGHT, {9, 17}},
+        {UP, {9}},
+    };
+
+    if (mGameState.skoude) {
+        mGameState.skoude->activate();
+        mGameState.skoude->setPosition({mOrigin.x + 400.0f, mOrigin.y - 200.0f});
+    } else {
+        mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
+                                       {100.0f, 100.0f},                                 // scale
+                                       "./assets/game/spritesheet-enemies-default.png",  // texture file address
+                                       ATLAS,                                            // single image or atlas?
+                                       {8, 8},                                           // atlas dimensions
+                                       skoudeAnimationAtlas,                             // actual atlas
+                                       NPC                                               // entity type
+        );
+
+        mGameState.skoude->setAIType(WANDERER);
+        mGameState.skoude->setSpeed(10);
+        mGameState.skoude->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
+        mGameState.skoude->setFrameSpeed(6);
+    }
 
     /*
        ----------- CAMERA -----------
@@ -65,17 +108,23 @@ void LevelB::initialise() {
 }
 
 void LevelB::update(float deltaTime) {
-    UpdateMusicStream(mGameState.bgm);
-
-    mGameState.mina->update(deltaTime,       // delta time / fixed timestep
-                            nullptr,         // player
-                            mGameState.map,  // map
-                            nullptr,         // collidable entities
-                            0                // col. entity count
+    mGameState.skoude->update(deltaTime,       // delta time / fixed timestep
+                              nullptr,         // player if entity is enemy
+                              mGameState.map,  // map
+                              nullptr,         // collidable entities
+                              0                // col. entity count
     );
 
-    // CAMERA
+    mGameState.mina->update(deltaTime,          // delta time / fixed timestep
+                            nullptr,            // player if entity is enemy
+                            mGameState.map,     // map
+                            mGameState.skoude,  // collidable entities
+                            1                   // col. entity count
+    );
+
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
+
+    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 2;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }
@@ -84,13 +133,14 @@ void LevelB::render() {
     ClearBackground(ColorFromHex(mBGColourHexCode));
 
     mGameState.mina->render();
+    mGameState.skoude->render();
     mGameState.map->render();
 }
 
 void LevelB::shutdown() {
     delete mGameState.mina;
+    delete mGameState.skoude;
     delete mGameState.map;
 
-    UnloadMusicStream(mGameState.bgm);
     UnloadSound(mGameState.jumpSound);
 }
