@@ -5,14 +5,16 @@
 
 struct GameState {
     // player
-    Entity* mina;
+    Entity* mina = nullptr;
 
     // enemy
-    Entity* skoude;
-    Map* map;
+    Entity* skoude = nullptr;
+    Map* map = nullptr;
 
     Music bgm;
     Sound jumpSound;
+    Sound enemyDeathSound;
+    Sound playerDeathSound;
 
     Camera2D camera;
 

@@ -93,11 +93,9 @@ void processInput() {
 
     if (IsKeyPressed(KEY_ENTER)) {
         if (gSceneIndex == NUMBER_OF_LEVELS - 1) {
-            printf("minus 1\n");
             gSceneIndex = 0;
             switchToScene(gLevels[gSceneIndex]);
         } else if (gSceneIndex == 0) {
-            printf("zero \n");
             gSceneIndex = 1;
             switchToScene(gLevels[gSceneIndex]);
         }
@@ -126,11 +124,11 @@ void update() {
         if (!gCurrentScene->getState().mina->isActive()) {
             --gLives;
             gCurrentScene->initialise();
-            printf("%i\n", gLives);
         }
     }
     if (gLives <= 0) {
-        switchToScene(gLevels[3]);
+        gSceneIndex = NUMBER_OF_LEVELS - 1;
+        switchToScene(gLevels[gSceneIndex]);
         gLives = 3;
     }
 }
@@ -165,9 +163,8 @@ int main() {
         update();
 
         if (gCurrentScene->getState().nextSceneID > 0) {
-            int id = gCurrentScene->getState().nextSceneID;
-            gSceneIndex = id;
-            switchToScene(gLevels[id]);
+            gSceneIndex = gCurrentScene->getState().nextSceneID;
+            switchToScene(gLevels[gSceneIndex]);
         }
 
         render();
