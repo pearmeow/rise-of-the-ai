@@ -24,7 +24,7 @@
 #include "CS3113/cs3113.h"
 
 // Global Constants
-constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 4;
+constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 6;
 
 constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 
@@ -115,9 +115,11 @@ void processInput() {
 
     if (IsKeyPressed(KEY_ENTER)) {
         if (gSceneIndex == NUMBER_OF_LEVELS - 1 || gSceneIndex == NUMBER_OF_LEVELS - 2) {
+            gLives = 3;
             gSceneIndex = 0;
             switchToScene(gLevels[gSceneIndex]);
         } else if (gSceneIndex == 0) {
+            gLives = 3;
             gSceneIndex = 1;
             switchToScene(gLevels[gSceneIndex]);
         }

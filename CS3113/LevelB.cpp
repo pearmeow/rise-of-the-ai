@@ -124,7 +124,7 @@ void LevelB::update(float deltaTime) {
 
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
-    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 2;
+    if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 3;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
 }
