@@ -62,7 +62,6 @@ void LevelA::initialise() {
     mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
     mGameState.mina->setFrameSpeed(6);
 
-    // TODO: change coords in vectors to match atlas
     std::map<Direction, std::vector<int>> skoudeAnimationAtlas = {
         {LEFT, {9, 17}},
         {DOWN, {9}},
@@ -70,8 +69,6 @@ void LevelA::initialise() {
         {UP, {9}},
     };
 
-    // TODO: make skoude
-    // mGameState.skoude = new Entity();
     mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
                                    {100.0f, 100.0f},                                 // scale
                                    "./assets/game/spritesheet-enemies-default.png",  // texture file address
@@ -89,7 +86,6 @@ void LevelA::initialise() {
     /*
        ----------- CAMERA -----------
     */
-    // TODO: make the camera not follow the player but scroll and also make player die when offscreen
     mGameState.camera = {0};                                    // zero initialize
     mGameState.camera.target = mGameState.mina->getPosition();  // camera follows player
     mGameState.camera.offset = mOrigin;                         // camera offset to center of screen
@@ -116,7 +112,6 @@ void LevelA::update(float deltaTime) {
 
     Vector2 currentPlayerPosition = {mGameState.mina->getPosition().x, mOrigin.y};
 
-    // TODO: make the player (probably touch something) to move to next level
     if (mGameState.mina->getPosition().y > 800.0f) mGameState.nextSceneID = 2;
 
     panCamera(&mGameState.camera, &currentPlayerPosition);
