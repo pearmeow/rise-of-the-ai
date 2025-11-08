@@ -14,11 +14,12 @@
 #include <raylib.h>
 
 #include "CS3113/LevelA.h"
+#include "CS3113/LoseScreen.h"
 #include "CS3113/MainMenu.h"
 #include "CS3113/cs3113.h"
 
 // Global Constants
-constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 2;
+constexpr int SCREEN_WIDTH = 1000, SCREEN_HEIGHT = 600, FPS = 120, NUMBER_OF_LEVELS = 3;
 
 constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 
@@ -37,7 +38,7 @@ MainMenu* gMainMenu = nullptr;
 LevelA* gLevelA = nullptr;
 // LevelB* gLevelB = nullptr;
 // LevelC* gLevelC = nullptr;
-// LoseScreen* gLoseScreen = nullptr;
+LoseScreen* gLoseScreen = nullptr;
 
 // Function Declarations
 void switchToScene(Scene* scene);
@@ -58,9 +59,11 @@ void initialise() {
 
     gLevelA = new LevelA(ORIGIN, "#C0897E");
     gMainMenu = new MainMenu(ORIGIN, "#FFFFFF");
+    gLoseScreen = new LoseScreen(ORIGIN, "#FFFFFF");
 
     gLevels.push_back(gMainMenu);
     gLevels.push_back(gLevelA);
+    gLevels.push_back(gLoseScreen);
     // gLevels.push_back(gLevelB);
     // gLevels.push_back(gLevelC);
     // gLevels.push_back(gLoseScreen);
@@ -89,7 +92,6 @@ void processInput() {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
-        printf("hi\n");
         if (gSceneIndex == NUMBER_OF_LEVELS - 1) {
             printf("minus 1\n");
             gSceneIndex = 0;
@@ -164,6 +166,7 @@ int main() {
 
         if (gCurrentScene->getState().nextSceneID > 0) {
             int id = gCurrentScene->getState().nextSceneID;
+            gSceneIndex = id;
             switchToScene(gLevels[id]);
         }
 
