@@ -79,6 +79,7 @@ void LevelA::initialise() {
     };
 
     if (mGameState.skoude) {
+        mGameState.skoude->setAIState(IDLE);
         mGameState.skoude->activate();
         mGameState.skoude->setPosition({mOrigin.x + 400.0f, mOrigin.y - 200.0f});
     } else {

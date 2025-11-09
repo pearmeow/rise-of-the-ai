@@ -55,7 +55,7 @@ void LevelC::initialise() {
         mGameState.mina->activate();
         mGameState.mina->setPosition({mOrigin.x - 800.0f, mOrigin.y + 180.0f});
     } else {
-        mGameState.mina = new Entity({mOrigin.x - 850.0f, mOrigin.y + 180.0f},            // position
+        mGameState.mina = new Entity({mOrigin.x - 835.0f, mOrigin.y + 180.0f},            // position
                                      {75.0f, 50.0f},                                      // scale
                                      "./assets/game/spritesheet-characters-default.png",  // texture file address
                                      ATLAS,                                               // single image or atlas?
@@ -79,19 +79,20 @@ void LevelC::initialise() {
     };
 
     if (mGameState.skoude) {
+        mGameState.skoude->setAIState(IDLE);
         mGameState.skoude->activate();
         mGameState.skoude->setPosition(
-            {mGameState.mina->getPosition().x - 100.0f, mGameState.mina->getPosition().y});
+            {mGameState.mina->getPosition().x - 200.0f, mGameState.mina->getPosition().y - 200.0f});
     } else {
-        mGameState.skoude =
-            new Entity({mGameState.mina->getPosition().x - 200.0f, mGameState.mina->getPosition().y},  // position
-                       {100.0f, 100.0f},                                                               // scale
-                       "./assets/game/spritesheet-enemies-default.png",  // texture file address
-                       ATLAS,                                            // single image or atlas?
-                       {8, 8},                                           // atlas dimensions
-                       skoudeAnimationAtlas,                             // actual atlas
-                       NPC                                               // entity type
-            );
+        mGameState.skoude = new Entity(
+            {mGameState.mina->getPosition().x - 200.0f, mGameState.mina->getPosition().y - 200.0f},  // position
+            {100.0f, 100.0f},                                                                        // scale
+            "./assets/game/spritesheet-enemies-default.png",  // texture file address
+            ATLAS,                                            // single image or atlas?
+            {8, 8},                                           // atlas dimensions
+            skoudeAnimationAtlas,                             // actual atlas
+            NPC                                               // entity type
+        );
 
         mGameState.skoude->setAIType(GHOST);
         mGameState.skoude->setSpeed(50);
