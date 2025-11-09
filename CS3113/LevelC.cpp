@@ -53,10 +53,10 @@ void LevelC::initialise() {
     if (mGameState.mina) {
         mGameState.mina->resetMovement();
         mGameState.mina->activate();
-        mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y - 200.0f});
+        mGameState.mina->setPosition({mOrigin.x - 800.0f, mOrigin.y + 180.0f});
     } else {
-        mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
-                                     {150.0f, 50.0f},                                     // scale
+        mGameState.mina = new Entity({mOrigin.x - 850.0f, mOrigin.y + 180.0f},            // position
+                                     {75.0f, 50.0f},                                      // scale
                                      "./assets/game/spritesheet-characters-default.png",  // texture file address
                                      ATLAS,                                               // single image or atlas?
                                      {8, 8},                                              // atlas dimensions
@@ -64,7 +64,7 @@ void LevelC::initialise() {
                                      PLAYER                                               // entity type
         );
 
-        mGameState.mina->setJumpingPower(550.0f);
+        mGameState.mina->setJumpingPower(750.0f);
         mGameState.mina->setColliderDimensions({mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f,
                                                 mGameState.mina->getColliderDimensions().y});
         mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
@@ -80,16 +80,18 @@ void LevelC::initialise() {
 
     if (mGameState.skoude) {
         mGameState.skoude->activate();
-        mGameState.skoude->setPosition({mOrigin.x + 400.0f, mOrigin.y - 200.0f});
+        mGameState.skoude->setPosition(
+            {mGameState.mina->getPosition().x - 100.0f, mGameState.mina->getPosition().y});
     } else {
-        mGameState.skoude = new Entity({mOrigin.x + 400.0f, mOrigin.y - 200.0f},         // position
-                                       {100.0f, 100.0f},                                 // scale
-                                       "./assets/game/spritesheet-enemies-default.png",  // texture file address
-                                       ATLAS,                                            // single image or atlas?
-                                       {8, 8},                                           // atlas dimensions
-                                       skoudeAnimationAtlas,                             // actual atlas
-                                       NPC                                               // entity type
-        );
+        mGameState.skoude =
+            new Entity({mGameState.mina->getPosition().x - 200.0f, mGameState.mina->getPosition().y},  // position
+                       {100.0f, 100.0f},                                                               // scale
+                       "./assets/game/spritesheet-enemies-default.png",  // texture file address
+                       ATLAS,                                            // single image or atlas?
+                       {8, 8},                                           // atlas dimensions
+                       skoudeAnimationAtlas,                             // actual atlas
+                       NPC                                               // entity type
+            );
 
         mGameState.skoude->setAIType(GHOST);
         mGameState.skoude->setSpeed(50);
@@ -133,8 +135,8 @@ void LevelC::render() {
     ClearBackground(ColorFromHex(mBGColourHexCode));
 
     mGameState.mina->render();
-    mGameState.skoude->render();
     mGameState.map->render();
+    mGameState.skoude->render();
 }
 
 void LevelC::shutdown() {

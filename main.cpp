@@ -178,7 +178,7 @@ void render() {
     BeginDrawing();
     BeginMode2D(gCurrentScene->getState().camera);
 
-    DrawText(gLivesText, 10.0f, 10.0f, 30, BLACK);
+    DrawText(gLivesText, -50.0f, 100.0f, 30, BLACK);
     gCurrentScene->render();
 
     EndMode2D();

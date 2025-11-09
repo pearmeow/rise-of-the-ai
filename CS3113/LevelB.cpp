@@ -53,10 +53,10 @@ void LevelB::initialise() {
     if (mGameState.mina) {
         mGameState.mina->resetMovement();
         mGameState.mina->activate();
-        mGameState.mina->setPosition({mOrigin.x - 300.0f, mOrigin.y - 200.0f});
+        mGameState.mina->setPosition({mOrigin.x - 800.0f, mOrigin.y + 180.0f});
     } else {
-        mGameState.mina = new Entity({mOrigin.x - 300.0f, mOrigin.y - 200.0f},            // position
-                                     {150.0f, 50.0f},                                     // scale
+        mGameState.mina = new Entity({mOrigin.x - 800.0f, mOrigin.y + 180.0f},            // position
+                                     {75.0f, 50.0f},                                      // scale
                                      "./assets/game/spritesheet-characters-default.png",  // texture file address
                                      ATLAS,                                               // single image or atlas?
                                      {8, 8},                                              // atlas dimensions
@@ -64,7 +64,7 @@ void LevelB::initialise() {
                                      PLAYER                                               // entity type
         );
 
-        mGameState.mina->setJumpingPower(550.0f);
+        mGameState.mina->setJumpingPower(750.0f);
         mGameState.mina->setColliderDimensions({mGameState.mina->getColliderDimensions().x * 2.0f / 3.0f,
                                                 mGameState.mina->getColliderDimensions().y});
         mGameState.mina->setAcceleration({0.0f, ACCELERATION_OF_GRAVITY});
