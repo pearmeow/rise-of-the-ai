@@ -91,7 +91,7 @@ void LevelC::initialise() {
                                        NPC                                               // entity type
         );
 
-        mGameState.skoude->setAIType(FOLLOWER);
+        mGameState.skoude->setAIType(GHOST);
         mGameState.skoude->setSpeed(50);
         mGameState.skoude->setAcceleration({0.0f, 0.0f});
         mGameState.skoude->setFrameSpeed(6);
@@ -110,9 +110,9 @@ void LevelC::initialise() {
 void LevelC::update(float deltaTime) {
     mGameState.skoude->update(deltaTime,  // delta time / fixed timestep
                               mGameState.mina,
-                              mGameState.map,  // map
-                              nullptr,         // collidable entities
-                              0                // col. entity count
+                              nullptr,  // ghosts don't collide
+                              nullptr,  // collidable entities
+                              0         // col. entity count
     );
 
     mGameState.mina->update(deltaTime,          // delta time / fixed timestep

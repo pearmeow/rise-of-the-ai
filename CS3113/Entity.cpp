@@ -235,7 +235,23 @@ void Entity::AIFollow(Entity* target) {
         case IDLE:
             if (Vector2Distance(mPosition, target->getPosition()) < 250.0f) mAIState = WALKING;
             break;
+        case WALKING:
+            // Depending on where the player is in respect to their x-position
+            // Change direction of the enemy
+            if (mPosition.x > target->getPosition().x)
+                moveLeft();
+            else
+                moveRight();
+        default:
+            break;
+    }
+}
 
+void Entity::AIGhostFollow(Entity* target) {
+    switch (mAIState) {
+        case IDLE:
+            if (Vector2Distance(mPosition, target->getPosition()) < 250.0f) mAIState = WALKING;
+            break;
         case WALKING:
             // Depending on where the player is in respect to their x-position
             // Change direction of the enemy
@@ -244,6 +260,10 @@ void Entity::AIFollow(Entity* target) {
             else
                 moveRight();
 
+            if (mPosition.y > target->getPosition().y)
+                moveUp();
+            else
+                moveDown();
         default:
             break;
     }
@@ -257,6 +277,10 @@ void Entity::AIActivate(Entity* target) {
 
         case FOLLOWER:
             AIFollow(target);
+            break;
+
+        case GHOST:
+            AIGhostFollow(target);
             break;
 
         default:
@@ -273,6 +297,9 @@ void Entity::update(float deltaTime, Entity* player, Map* map, Entity* collidabl
     resetColliderFlags();
 
     mVelocity.x = mMovement.x * mSpeed;
+    if (mAIType == GHOST) {
+        mVelocity.y = mMovement.y * mSpeed;
+    }
 
     mVelocity.x += mAcceleration.x * deltaTime;
     mVelocity.y += mAcceleration.y * deltaTime;
