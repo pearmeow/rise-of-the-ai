@@ -81,7 +81,7 @@ void LevelA::initialise() {
     if (mGameState.skoude) {
         mGameState.skoude->setAIState(IDLE);
         mGameState.skoude->activate();
-        mGameState.skoude->setPosition({mOrigin.x + 400.0f, mOrigin.y - 200.0f});
+        mGameState.skoude->setPosition({mOrigin.x + 200.0f, mOrigin.y - 200.0f});
     } else {
         mGameState.skoude = new Entity({mOrigin.x + 200.0f, mOrigin.y - 200.0f},         // position
                                        {100.0f, 100.0f},                                 // scale
