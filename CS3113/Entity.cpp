@@ -356,7 +356,7 @@ void Entity::render() {
     // Render the texture on screen
     DrawTexturePro(mTexture, textureArea, destinationArea, originOffset, mAngle, WHITE);
 
-    displayCollider();
+    // displayCollider();
 }
 
 void Entity::displayCollider() {
